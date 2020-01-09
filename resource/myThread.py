@@ -3,11 +3,11 @@ import time
 
 
 class MyThread(threading.Thread):
-    def __init__(self, target):
-        self.func = target
+    def __init__(self, target_func):
+        self.func = target_func
         threading.Thread.__init__(self)
         self.daemon = True
-        #flag to pause thread
+        # flag to pause thread
         self.paused = False
         self.event = threading.Event()
         # Explicitly using Lock over RLock since the use of self.paused
@@ -23,7 +23,6 @@ class MyThread(threading.Thread):
             with self.pause_cond:
                 while self.paused:
                     self.pause_cond.wait()
-
                 self.func()
 
     def pause(self):
@@ -46,7 +45,6 @@ class MyThread(threading.Thread):
         if self.is_alive():
             self.event.set()
             self.join()
-
 
 
 if __name__ == "__main__":
